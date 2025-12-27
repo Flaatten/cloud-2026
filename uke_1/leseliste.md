@@ -6,7 +6,12 @@ Vi oppfordrer deg til å lese gjennom disse artiklene grundig, da de vil gi deg 
 > [!TIP]  
 > Husk å ta notater mens du leser, da dette vil hjelpe deg med å huske og forstå materialet bedre.
 
+## Terminal
+
 ## Docker og docker-compose
+- [How to Learn the Linux Terminal as a Beginner – Tips and Examples](https://www.freecodecamp.org/news/how-to-learn-linux-terminal-as-a-beginner/)
+- [Beginner's Guide To The Linux Terminal](https://www.youtube.com/watch?v=s3ii48qYBxA)
+- [Bash in 100 Seconds](https://www.youtube.com/watch?v=I4EWvMFj37g)
 
 ### Docker
 

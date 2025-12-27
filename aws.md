@@ -9,19 +9,18 @@
             - [Hvordan bruke AWS Resource Explorer](#hvordan-bruke-aws-resource-explorer)
     - [Hvordan vet jeg hvor mye jeg har igjen av free tier kvoten min?](#hvordan-vet-jeg-hvor-mye-jeg-har-igjen-av-free-tier-kvoten-min)
 
-I ukesoppgavene i dette kurset vil vi kun benytte tjenester som faller innenfor rammene av [AWS Free Tier](https://aws.amazon.com/free/). Dersom du bruker tjenester utenfor de som er spesifisert i ukesoppgavene, eller unnlater å slette ressurser i AWS etter eksperimentering, kan dette medføre kostnader for deg.
+I ukesoppgavene i dette kurset vil vi kun benytte tjenester som faller innenfor rammene av [AWS Free Tier](https://aws.amazon.com/free/). Dersom du bruker tjenester som er uten free tier, kan dette medføre kostnader for deg. I ukesoppgavene og gjennom kurset vil vi utelukkende bruke tjenester innenfor AWS Free Tier. Du kan lese mer om free tier [her](https://docs.aws.amazon.com/awsaccountbilling/latest/aboutv2/free-tier.html).
 
 > [!CAUTION]
-> **Enhver kostnad som påløper er brukerens eget ansvar. Gokstad Akademiet fraskriver seg ethvert ansvar for kostnader som kan oppstå som følge av bruk eller eksperimentering med AWS-tjenester. Vær derfor meget varsom når du eksperimenterer med nye tjenester, og vær sikker på at de er innenfor free tier, eller til en pris du er villig til å betale.**
+> **Enhver kostnad som påløper er brukerens eget ansvar. Gokstad Akademiet fraskriver seg ethvert ansvar for kostnader som kan oppstå som følge av bruk eller eksperimentering med AWS-tjenester utenfor free tier. Vær derfor meget varsom når du eksperimenterer med nye tjenester, og vær sikker på at de er innenfor free tier, eller til en pris du er villig til å betale. Ved opprettelse av konto har en mulighet til å selecte planen som heter "Free (6 months)", og en vil da være sikker på at det ikke kan opprettes ressurser som pådrar kostnader. Sørg også for å velge support planen som er gratis. Se bilde under.**
 
-**Merk at kvotene deles mellom alle ressurstyper av samme type. F.eks. for EC2 har man 750t, som betyr følgende:**
-- 1 EC2 instans kan kjøre 750 timer (31 dager)
-- 2 EC2 instanser kan kjøre 375 timer hver (15.6 dager)
-- 3 EC2 instanser kan kjøre 250 timer hver (10.4 dager)
 
-## Sikkerhetstiltak og kostnadsovervåkning
 
-Nedenfor finner du tiltak som kan hjelpe med å unngå bruk av tjenester utenfor AWS Free Tier. Du kan lese mer om free tier [her](https://docs.aws.amazon.com/awsaccountbilling/latest/aboutv2/tracking-free-tier-usage.html). For å beskytte kontoen din og unngå uventede kostnader, anbefaler vi at du setter opp følgende:
+![Free Tier](static/img/free-tier-option.png)
+
+## Sikkerhetstiltak og overvåkning
+
+Nedenfor finner du tiltak som kan hjelpe med å sikre kontoen din og overvåke bruken av AWS Free Tier. For å beskytte kontoen din og holde oversikt over ressursbruken, anbefaler vi at du setter opp følgende:
 
 ### Multi-Factor Authentication (MFA)
 
@@ -29,14 +28,18 @@ Det er sterkt anbefalt å aktivere MFA på din AWS root-konto og alle IAM-bruker
 
 1. Logg inn på AWS Management Console
 2. Gå til IAM-dashbordet
-3. Velg "Security credentials"
-4. Under "Multi-factor authentication (MFA)", klikk "Assign MFA device"
+3. Under "Security recommendations"
+4. Under "Add MFA for root user", klikk "Add MFA"
+5. Gi MFA-enheten ett navn
+6. Velg hva du ønsker under "Device options". For de fleste vil nok "Authenticator App" være det beste. 
+7. Scan QR-koden som 
 5. Velg type MFA-enhet (vanligvis "Virtual MFA device")
 6. Bruk en autentikator-app (som Google Authenticator) til å skanne QR-koden
 7. Skriv inn to påfølgende MFA-koder for å bekrefte oppsettet
 
 
-### Zero Spend Budget - Oppsett for å avdekke eventuelle tjenester som har en kostnad
+
+<!-- ### Zero Spend Budget - Oppsett for å avdekke eventuelle tjenester som har en kostnad
 
 1. Logg inn på AWS Management Console.
 2. Gå til "Billing and Cost Management" dashboardet.
@@ -81,4 +84,4 @@ Det er mulig å sjekke hvor du har brukt av din free tier kvote ved å gå til `
 
 Videre herfra trykker du på `Free Tier` i menyen til venstre og får opp følgende view:
 
-![Screenshot of AWS VPC Creation](static/img/free-tier-quota.png)
+![Screenshot of AWS VPC Creation](static/img/free-tier-quota.png) -->
