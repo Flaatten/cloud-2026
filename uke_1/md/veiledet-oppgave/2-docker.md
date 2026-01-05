@@ -76,8 +76,6 @@ services:
         depends_on: 
             db:
                 condition: service_healthy
-        deploy:
-            replicas: 3
         healthcheck:
             test: ["CMD", "curl", "-f", "http://localhost:8080"]
             interval: 30s

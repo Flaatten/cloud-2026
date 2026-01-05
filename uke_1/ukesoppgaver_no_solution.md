@@ -208,6 +208,22 @@ Logg inn i MySQL-databasen som rot-brukeren og kjør kommandoen `SHOW DATABASES`
 > [!NOTE]  
 > Sørg for at MySQL-tjenesten kjører før du prøver å koble til databasen fra applikasjonen.
 
+> [!IMPORTANT]  
+> Før du kan koble til MySQL-databasen, må du først installere `mysql2`-pakken. Legg til følgende i `package.json`:
+
+```json
+{
+  "name": "hello-world-app",
+  "version": "1.0.0",
+  "dependencies": {
+    "mysql2": "^3.6.0"
+  }
+}
+```
+
+Kjør deretter `npm install` for å installere avhengigheten, eller bygg Docker-imaget på nytt slik at `mysql2` blir installert automatisk.
+
+
 Oppdater Node.js-applikasjonen til å koble til MySQL-databasen.
 
 
