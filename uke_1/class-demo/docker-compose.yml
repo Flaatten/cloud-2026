@@ -1,0 +1,24 @@
+version: '3'
+services:
+  web: 
+    image: flaattengokstad/hello-world-app:latest
+    ports: 
+      - "8080:8080"
+    depends_on:
+      db:
+        condition: service_healthy
+
+  db: 
+    image: mysql:latest
+    environment: 
+      MYSQL_ROOT_PASSWORD: example
+      MYSQL_DATABASE: exampledb
+      MYSQL_USER: exampleuser
+      MYSQL_PASSWORD: examplepass
+    ports:
+      - "3306:3306"
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h localhost -u root -pexample"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
