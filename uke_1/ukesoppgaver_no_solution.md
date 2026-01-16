@@ -234,8 +234,6 @@ Oppdater Node.js-applikasjonen til å koble til MySQL-databasen.
 
 Bruk miljøvariabler for å konfigurere databaseforbindelsen.
 
-
-
 ### **Oppgave 9: Volumer**
 
 > [!IMPORTANT]  
@@ -296,9 +294,7 @@ connection.connect((err) => {
 });
 ```
 
-
-
-
+\n\n
 ### **Oppgave 12: Pushe Docker Image til Docker Hub**
 
 > [!TIP]  
@@ -313,6 +309,4 @@ I denne oppgaven skal vi pushe Docker imaget for web-containeren til Docker Hub.
 > Å pulle Docker images fra Docker Hub gjør det enkelt å sette opp applikasjoner uten å måtte bygge dem lokalt.
 
 I denne oppgaven skal vi pulle Docker imaget for web-containeren fra Docker Hub og bruke det i en `docker-compose`-fil.
-
-
 
