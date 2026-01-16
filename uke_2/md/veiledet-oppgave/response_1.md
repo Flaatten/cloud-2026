@@ -52,6 +52,7 @@ graph TD
       * Endre tillatelser på key pair: `chmod 400 taskmanager-key.pem`
     - Konfigurer \"Network Settings \" -> Trykk på Edit
         - Konfigurer instance details: Velg ditt VPC og **public** subnettet (se på navnet for å vite at det er public) i sone `eu-west-1a`
+        - **VIKTIG: EC2-instansen MÅ plasseres i et public subnet for at SSH skal kunne nå den. Private subnets har ikke direkte tilgang til internett via Internet Gateway.**
         - `Auto-assign public IP`: Enable
         - `Firewall`: Create Security Group
             - Gi den et navn

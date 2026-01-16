@@ -1,0 +1,48 @@
+name: Generate and Commit Markdown
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  generate-and-commit:
+    if: github.repository_owner != 'gokstadakademiet'
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Set up Git
+      run: |
+        git config --global user.name 'github-actions[bot]'
+        git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+
+    - name: Find and process folders
+      run: |
+        chmod +x create_without_solution.sh
+        for dir in $(find . -type d -name 'uke_[0-9]*'); do
+          cd "$dir"
+          if [ -f generate-md.sh ]; then
+            chmod +x generate-md.sh
+            ./generate-md.sh
+            if [ -f ukesoppgaver.md ]; then
+              if ! git diff --quiet ukesoppgaver.md; then
+                ../create_without_solution.sh ukesoppgaver.md
+
+                git add ukesoppgaver.md ukesoppgaver_no_solution.md
+                git commit -m "Update ukesoppgaver.md for $dir"
+              else
+                echo "No changes in ukesoppgaver.md for $dir"
+              fi
+            fi
+          fi
+          cd - > /dev/null
+        done
+
+    - name: Push changes
+      uses: ad-m/github-push-action@v0.6.0
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        branch: main
