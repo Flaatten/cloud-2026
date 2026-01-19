@@ -686,7 +686,7 @@ EOF
 Opprett Dockerfile for backend:
 ```bash
 cat << 'EOF' > Dockerfile-backend
-FROM python:3.8-slim-buster
+FROM python:3.9-slim-bullseye
 WORKDIR /app
 
 RUN apt-get update && apt-get install -y \
