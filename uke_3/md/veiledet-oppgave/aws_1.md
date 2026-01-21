@@ -795,8 +795,10 @@ I denne oppgaven skal du implementere custom metrics for å spore aktiviteten i 
 1. Implementer følgende custom metrics i applikasjonen:
    - TasksCreated: Teller nye oppgaver
    - TasksCompleted: Teller fullførte oppgaver
-2. Konfigurer IAM rolle for CloudWatch metrics på EC2-instansen
-3. Legg til metrikk-widgets i CloudWatch dashboard
+2. Legg til metrikk-widgets i CloudWatch dashboard
+
+> [!NOTE]
+> IAM-rollen som ble konfigurert i oppgave 5a har allerede `cloudwatch:PutMetricData` rettigheter, så du trenger ikke å oppdatere IAM-rollen for denne oppgaven.
 
 ### 6a. Implementer Custom Metrics
 
@@ -913,44 +915,7 @@ docker push <YOUR_DOCKERHUB_ACCOUNT>/taskmanager-backend:latest
 
 </details> 
 
-### 6b. Konfigurere IAM rolle for CloudWatch Metrics
-
-Oppdater IAM rollen til å inkludere mulighet for å sende metrics til CloudWatch. Bruk `"cloudwatch:PutMetricData"` i actions. 
-
-<details>
-<summary>Løsning</summary>
-
-1. Verifiser at EC2-instansen har riktige IAM-rettigheter:
-- Gå til IAM console og finn rollen til EC2-instansen din
-- Oppdater IAM rollen ved å trykke på `Add permissions` -> `Create inline policy` -> `JSON` -> og copy-paste JSON under:
-```json
-{
-  "Version": "2012-10-17",
-  "Statement": [
-    {
-      "Effect": "Allow",
-      "Action": [
-        "cloudwatch:PutMetricData"
-      ],
-      "Resource": "*"
-    }
-  ]
-}
-```
-- Trykk på `Next`
-- Gi den et navn, f.eks. `PutMetricDataPolicy`
-- Valider at du får opp følgende under `Permissions defined in this policy`:
-  ``` 
-  CloudWatch
-  Limited: Write
-  All resources
-  None
-  ```
-- Trykk på `Create Policy`
-
-</details>
-
-### 6c. Deploy det nye Docker imaget på EC2-instansen
+### 6b. Deploy det nye Docker imaget på EC2-instansen
 
 Det nye Docker imaget inneholder ny kode som pusher opp custom metrics til Cloudwatch. Vi skal nå kjøre i gang dette imaget. 
 
@@ -971,7 +936,7 @@ docker run -d \
 curl -X POST -H "Content-Type: application/json" -d '{"title":"Test Task"}' http://localhost:5000/tasks
 ```
 
-### 6d. Konfigurer Dashboard
+### 6c. Konfigurer Dashboard
 
 Sett opp en ny CloudWatch Widget som viser den nye metrikken `TaskManagerMetrics`.
 
