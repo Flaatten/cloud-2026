@@ -507,9 +507,7 @@ connection.connect((err) => {
 1. **Miljøvariabler**: Vi bruker miljøvariabler for å konfigurere databaseforbindelsen. Miljøvariabler er en måte å konfigurere applikasjoner på uten å hardkode verdier i kildekoden.
 2. **Oppdatere applikasjonen**: Vi oppdaterer applikasjonen til å bruke miljøvariablene. Dette gjør applikasjonen mer fleksibel og enklere å konfigurere i forskjellige miljøer.
 
-</details>
-
-
+</details>\n\n
 ### **Oppgave 9: Volumer**
 
 > [!IMPORTANT]  
@@ -765,9 +763,7 @@ Nå vil databasen bli initialisert med en melding før applikasjonen starter, og
 
 
 </details>
-
-
-
+\n\n
 ### **Oppgave 12: Pushe Docker Image til Docker Hub**
 
 > [!TIP]  
@@ -902,6 +898,4 @@ volumes:
 2. **Pulle image**: Vi pulle Docker imaget ved hjelp av `docker pull`-kommandoen. Dette laster ned imaget fra Docker Hub til din lokale maskin.
 3. **Oppdatere `docker-compose.yml`**: Vi oppdaterer `docker-compose.yml`-filen for å bruke det pulled imaget i stedet for å bygge det lokalt. Dette gjør at `docker-compose` bruker det nedlastede imaget når den starter opp tjenestene.
 
-</details>
-
-
+</details>\n\n
