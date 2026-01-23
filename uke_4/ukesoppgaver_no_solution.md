@@ -849,7 +849,7 @@ For at frontenden skal kunne kommunisere med Lambda-funksjonen, må vi sette opp
 
 ### 3. Opprett frontend-filer
 
-**Husk å editere `LAMBDA_BASE_URL` i scriptet nedenfor for at det skal fungere som tiltenkt. 
+**Husk å editere `LAMBDA_BASE_URL` i scriptet nedenfor for at det skal fungere som tiltenkt. **
 
 ```bash
 # Opprett index.html
@@ -1098,9 +1098,7 @@ sudo chmod 644 /var/www/html/*
 
 </details>
 
-
-
-
+\n\n
 ## Oppgave 5: Implementer logging og overvåking med CloudWatch
 
 I denne oppgaven skal vi implementere logging og overvåking for oppgavestyringssystemet vårt ved hjelp av Amazon CloudWatch. Dette vil gi oss bedre innsikt i systemets ytelse og hjelpe oss med å identifisere potensielle problemer.
@@ -1327,9 +1325,7 @@ La oss legge til en ny helper-funksjon for å publisere metrikkene, og registrer
 Med denne konfigurasjonen har du nå implementert omfattende logging og overvåking for oppgavestyringssystemet ditt. Du kan enkelt overvåke systemets ytelse, spore antall oppgaver som blir lagt til og fullført, og motta varsler om eventuelle problemer.
 
 
-</details>
-
-
+</details>\n\n
 # Sletting av ressurser i etterkant:
 
 Resource Explorer klarer ikke alltid å finne RDS databaser, så disse må slettes manuelt. Dette gjøres ved å gå til RDS i konsollen, velge databasen og slette den.
