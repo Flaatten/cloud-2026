@@ -62,8 +62,8 @@ graph TD
     - Gå til EC2 Dashboard
     - Klikk "Launch Instance"
     - Gi den et navn
-    - Velg Amazon Linux 2 AMI
-    - Velg t2.micro instance type
+    - Velg Amazon Linux AMI (free tier)
+    - Velg t2.nano instance type
     - Ved "Key pair (login)":
       * Velg "Create new key pair"
       * Gi key pair et navn (f.eks. "taskmanager-key")
@@ -72,6 +72,7 @@ graph TD
       * Endre tillatelser på key pair: `chmod 400 taskmanager-key.pem`
     - Konfigurer \"Network Settings \" -> Trykk på Edit
         - Konfigurer instance details: Velg ditt VPC og **public** subnettet (se på navnet for å vite at det er public) i sone `eu-west-1a`
+        - **VIKTIG: EC2-instansen MÅ plasseres i et public subnet for at SSH skal kunne nå den. Private subnets har ikke direkte tilgang til internett via Internet Gateway.**
         - `Auto-assign public IP`: Enable
         - `Firewall`: Create Security Group
             - Gi den et navn
@@ -155,6 +156,8 @@ Før du begynner her må det settes riktige tilganger på SSH-nøkkelen. Det gj�
     - Reload privilege tables now? (Y)
    ```
 
+   **Merk at på de første promptene skal du trykke "n" for no, resten kan bruke default og dermed bare trykke enter
+
 4. Konfigurer Nginx:
 ```bash
 sudo tee /usr/share/nginx/html/index.html << 'EOF'
@@ -171,6 +174,8 @@ EOF
 ```bash
 sudo systemctl restart nginx
 ```
+
+Det kan være at du må cleare cachen i browseren for å se endringene. Alternativt kan du åpne et nytt incognito-vindu i browseren og gå mot public IPen til EC2-instansen; da vil ikke browseren bruke cachen.
 
 5. Opprett database:
    ```
@@ -194,7 +199,7 @@ I denne oppgaven skal du implementere en enkel backend for oppgavestyringssystem
 1. Installer Python og nødvendige pakker på EC2-instansen.
 2. Skriv en enkel Flask-applikasjon som kobler til MySQL-databasen.
 3. Implementer API-endepunkter for å liste, opprette, oppdatere og slette oppgaver.
-4. Konfigurer Nginx til å videresende forespørsler til Flask-applikasjonen.
+4. Konfigurer Nginx til å videresende forespørslene til Flask-applikasjonen.
 
 ### Mermaid-diagram:
 
@@ -517,6 +522,23 @@ Her skal du migrere applikasjonen til containere ved hjelp av Docker på EC2.
 > [!NOTE]
 > I denne oppgaven gjør du oppgave 1 og 2 lokalt på din maskin, og deretter oppgave 3 og 4 på EC2-instansen via SSH. 
 
+> [!IMPORTANT]
+> Før du starter med denne oppgaven må du stoppe nginx-prosessen og Flask-applikasjonen på EC2-instansen for å unngå portkonflikter med Docker-containerne. SSH inn på EC2-instansen og kjør:
+> ```bash
+> # Stopp nginx
+> sudo systemctl stop nginx
+> sudo systemctl disable nginx
+> 
+> # Stopp Flask-applikasjonen
+> # Finn prosess-ID for Flask
+> ps aux | grep "python3 app.py"
+> # Stopp prosessen (erstatt PID med riktig prosess-ID)
+> kill <PID>
+> 
+> # Alternativt, stopp alle Python-prosesser:
+> pkill -f "python3 app.py"
+> ```
+
 ### Oppgavebeskrivelse:
 
 1. Opprett Dockerfiler for frontend og backend lokalt.
@@ -746,24 +768,12 @@ sudo chmod +x /usr/local/bin/docker-compose
 docker-compose version
 ```
 
-4. Installer MySQL på samme måte som i oppgave 2:
-```
-sudo dnf install mariadb105-server mariadb105-server-utils -y
-sudo systemctl start mariadb
-sudo systemctl enable mariadb
-sudo mysql_secure_installation
-# Follow prompts:
-# - Enter current password for root (press Enter for none)
-# - Set root password (remember this)
-# - Remove anonymous users? (Y)
-# - Disallow root login remotely? (Y)
-# - Remove test database and access to it? (Y)
-# - Reload privilege tables now? (Y)
+4. Konfigurer MySQL til å tillate tilkoblinger fra andre steder enn lokalhost
+
+Kjør først `sudo mysql` for å logge inn på databasen. Kjør deretter følgende for å editere tilganger:
 
 
-# Create database
-sudo mysql
-
+```bash
 CREATE USER 'root'@'%' IDENTIFIED BY 'yourpassword';
 
 CREATE DATABASE taskmanager;
@@ -849,6 +859,4 @@ docker logs frontend
 docker logs backend
 ```
 
-</details>
-
-
+</details>\n\n
