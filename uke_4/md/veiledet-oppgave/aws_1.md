@@ -58,7 +58,7 @@ graph TD
     * Last ned key pair-filen og lagre den sikkert
     * Endre tillatelser på key pair: `chmod 400 taskmanager-key.pem`
   - Konfigurer "Network Settings" -> Trykk på Edit
-    - Konfigurer instance details: Velg ditt VPC og public subnettet i sone `eu-west-1a`
+    - Konfigurer instance details: Velg ditt VPC og public subnettet i sone `eu-west-3a`
     - `Auto-assign public IP`: Enable
     - `Firewall`: Create Security Group
       - Gi den et navn
@@ -255,7 +255,7 @@ import pymysql
 
 def get_db_connection():
   return pymysql.connect(
-    host='taskmanager.c7g8yamuicvd.eu-west-1.rds.amazonaws.com',  # ENDRE DETTE: Hent fra RDS Console under Connectivity & security
+    host='taskmanager.c7g8yamuicvd.eu-west-3.rds.amazonaws.com',  # ENDRE DETTE: Hent fra RDS Console under Connectivity & security
     user='admin',  # ENDRE DETTE: Brukernavnet du valgte ved opprettelse av RDS
     password='passordd',  # ENDRE DETTE: Passordet du valgte ved opprettelse av RDS
     db='taskmanager',  # Database navnet (skal være taskmanager hvis du fulgte instruksjonene)
@@ -594,6 +594,37 @@ def lambda_handler(event, context):
   - Klikk på "Create policy"
   - Verifiser at den nye policyen vises under "Permissions policies" for rollen
 
+6. Test koden via Lambda test
+
+Oppdatert lambda test event objektet til å være:
+
+**GetTasks**:
+
+```json
+{
+  "requestContext": {
+    "http": {
+      "method": "GET",
+      "path": "/tasks"
+    }
+  },
+}
+```
+
+**AddTask**
+
+```json
+{
+  "requestContext": {
+    "http": {
+      "method": "POST",
+      "path": "/tasks"
+    }
+  },
+  "body": "{\"title\": \"Test1\", \"description\": \"Jeg må gjøre ditt og datt\"}"
+}
+```
+
 ### Steg 4: Opprette Process Task Lambda
 
 1. Gå til Lambda i AWS Console
@@ -625,7 +656,7 @@ import time
 
 def get_db_connection():
     return pymysql.connect(
-        host='taskmanager.c7g8yamuicvd.eu-west-1.rds.amazonaws.com',
+        host='taskmanager.c7g8yamuicvd.eu-west-3.rds.amazonaws.com',
         user='admin',
         password='passordd',
         db='taskmanager',
@@ -697,7 +728,7 @@ Før vi kan bruke SQS som trigger må Lambda-funksjonen ha tillatelse til å les
            "sqs:DeleteMessage",
            "sqs:GetQueueAttributes"
         ],
-        "Resource": "arn:aws:sqs:eu-west-1:YOUR_ACCOUNT_ID:task-processing-queue"
+        "Resource": "arn:aws:sqs:eu-west-3:YOUR_ACCOUNT_ID:task-processing-queue"
       }
    ]
 }
@@ -733,7 +764,7 @@ Før vi kan bruke SQS som trigger må Lambda-funksjonen ha tillatelse til å les
         {
             "messageId": "29ce3c25-141d-4675-8d38-b6d0ac7ed42a",
             "receiptHandle": "AQEBlJe7QjuukDhJk0uzJTNRn0yIkTzpoxNbOL+ibEntuixJt24z9nPcRajeZPjIgrP6fskHNfPaoALv7snkS15hNQyXHkAbIVubZ4KToUzXYmFkcHDkWV28aof3h/kcN+a++R3vKEIU+U7unJVU9BTjVxpgiBG8y15TAXduMzyiG6xY+bV56NYcnqzVLfh0/38/LbbyqMRePutTG68jUG1qHhc7tGjWm0MxUlSkYCagTuzW4FbNBmdgqxbbgvjVUai2DFqFS+C4p7w5QQneTzMdqNXuEivi24PhOcIuz5dnLqAXL+Wfal9Qplzqe9Uw5zGf5SKBrmcV/tOV4fhGijHDXgUuthLmQDUK+eeSdb646mffHyrty5N+6Tco29ekdXAN",
-            "body": "{\n  \"Type\" : \"Notification\",\n  \"MessageId\" : \"fad20310-9642-5c51-9eac-6301ac3fc58c\",\n  \"TopicArn\" : \"arn:aws:sns:eu-west-1:043309361433:new-task-notification\",\n  \"Subject\" : \"New Task Added\",\n  \"Message\" : \"{\\\"task_id\\\": 7, \\\"title\\\": \\\"Test Task\\\", \\\"description\\\": \\\"This is a test task\\\"}\",\n  \"Timestamp\" : \"2025-01-27T07:39:41.387Z\",\n  \"SignatureVersion\" : \"1\"}",
+            "body": "{\n  \"Type\" : \"Notification\",\n  \"MessageId\" : \"fad20310-9642-5c51-9eac-6301ac3fc58c\",\n  \"TopicArn\" : \"arn:aws:sns:eu-west-3:043309361433:new-task-notification\",\n  \"Subject\" : \"New Task Added\",\n  \"Message\" : \"{\\\"task_id\\\": 7, \\\"title\\\": \\\"Test Task\\\", \\\"description\\\": \\\"This is a test task\\\"}\",\n  \"Timestamp\" : \"2025-01-27T07:39:41.387Z\",\n  \"SignatureVersion\" : \"1\"}",
             "attributes": {
                 "ApproximateReceiveCount": "889",
                 "AWSTraceHeader": "Root=1-6797383c-04bb76331b7f67185f53c060;Parent=5d84e81c2ab91f37;Sampled=0;Lineage=1:890bcd31:0",
@@ -744,8 +775,8 @@ Før vi kan bruke SQS som trigger må Lambda-funksjonen ha tillatelse til å les
             "messageAttributes": {},
             "md5OfBody": "aec37728699accb4f0d795b8703fef00",
             "eventSource": "aws:sqs",
-            "eventSourceARN": "arn:aws:sqs:eu-west-1:043309361433:task-processing-queue",
-            "awsRegion": "eu-west-1"
+            "eventSourceARN": "arn:aws:sqs:eu-west-3:043309361433:task-processing-queue",
+            "awsRegion": "eu-west-3"
         }
     ]
 }
@@ -761,6 +792,8 @@ Før vi kan bruke SQS som trigger må Lambda-funksjonen ha tillatelse til å les
   ```sql
   SELECT * FROM tasks ORDER BY id DESC LIMIT 1;
   ```
+
+  Denne legger ikke til en ny task i databasen, da det gjøres i `task-management`-lambdaen. Denne ser etter eksisterende tasker for å oppdatere statusen på de. 
 
 4. Verifiser meldingsflyt:
   - Gå til SQS Queue
@@ -824,7 +857,7 @@ sudo systemctl status httpd
 
 ### 2. Konfigurer Lambda Function URL
 
-For at frontenden skal kunne kommunisere med `process-task` Lambda-funksjonen, må vi sette opp en Function URL:
+For at frontenden skal kunne kommunisere med `task-management` Lambda-funksjonen, må vi sette opp en Function URL:
 
 1. Gå til Lambda-funksjonen i AWS Console
 2. Under "Configuration" tab, velg "Function URL" i venstre meny
@@ -880,7 +913,7 @@ EOL
 
 # Opprett script.js
 sudo bash -c 'cat > /var/www/html/script.js' << 'EOL'
-const LAMBDA_BASE_URL = 'https://kzobijfozlbw6urcajwx3z24wi0leutr.lambda-url.eu-west-1.on.aws';
+const LAMBDA_BASE_URL = 'https://kzobijfozlbw6urcajwx3z24wi0leutr.lambda-url.eu-west-3.on.aws';
 
 async function getTasks() {
   try {

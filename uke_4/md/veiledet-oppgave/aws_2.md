@@ -21,7 +21,7 @@ def lambda_handler(event, context):
      # Eksisterende kode for å legge til oppgave
 
      # Legg til custom metric
-     cloudwatch = boto3.client('cloudwatch', region_name='eu-west-1')
+     cloudwatch = boto3.client('cloudwatch', region_name='eu-west-3')
      cloudwatch.put_metric_data(
           Namespace='TaskManagementSystem',
           MetricData=[
@@ -140,7 +140,7 @@ import time
 
 def get_db_connection():
     return pymysql.connect(
-        host='taskmanager.c7g8yamuicvd.eu-west-1.rds.amazonaws.com',
+        host='taskmanager.c7g8yamuicvd.eu-west-3.rds.amazonaws.com',
         user='admin',
         password='passordd',
         db='taskmanager',
@@ -149,7 +149,7 @@ def get_db_connection():
     )
 
 def put_metric(metric_name):
-     cloudwatch = boto3.client('cloudwatch', region_name='eu-west-1')
+     cloudwatch = boto3.client('cloudwatch', region_name='eu-west-3')
      cloudwatch.put_metric_data(
           Namespace='TaskManagementSystem',
           MetricData=[{
@@ -214,7 +214,7 @@ La oss legge til en ny helper-funksjon for å publisere metrikkene, og registrer
 
 5. Legg til de nye custom metrics til dashboardet:
    - Gå tilbake til CloudWatch Dashboard
-   - Klikk på \"Add widget\
+   - Klikk på \"Add widget\"
    - Velg \"Number\" som widget type
    - Søk etter \"TaskManagementSystem\" namespace
    - Velg \"TasksAdded\" og \"TasksCompleted\" metrics

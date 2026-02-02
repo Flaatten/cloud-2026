@@ -7,7 +7,7 @@ Før man begynner på denne oppgaven må man legge inn eposten sin som `Verified
 1. Verifiser epost i SES:
     - Åpne AWS Console
     - Søk etter "SES" eller "Simple Email Service"
-    - Velg din region (f.eks. "eu-west-1")
+    - Velg din region (f.eks. "eu-west-3")
     - Klikk på "Verified identities"
     - Velg "Create identity"
     - Velg "Email address"
@@ -35,7 +35,7 @@ Her er et eksempel på hvordan du kan sende epost via Python og AWS SES:
 import boto3
 
 def send_email(subject, body, recipient):
-    ses_client = boto3.client('ses', region_name='eu-west-1')  # Endre region etter behov
+    ses_client = boto3.client('ses', region_name='eu-west-3')  # Endre region etter behov
     
     try:
         response = ses_client.send_email(

@@ -13,7 +13,7 @@ YELLOW='\033[1;33m'
 NC='\033[0m' # No Color
 
 # Default values
-AWS_REGION="eu-west-1"
+AWS_REGION="eu-west-3"
 AWS_PROFILE=""
 
 # Parse command line arguments
@@ -29,7 +29,7 @@ while [[ $# -gt 0 ]]; do
       ;;
     --help)
       echo "Usage: $0 [--region REGION] [--profile PROFILE]"
-      echo "  --region: AWS region (default: eu-west-1)"
+      echo "  --region: AWS region (default: eu-west-3)"
       echo "  --profile: AWS CLI profile (optional)"
       exit 0
       ;;

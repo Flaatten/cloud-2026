@@ -43,7 +43,7 @@ The script will delete the following AWS resources:
 ### With Specific Region
 
 ```bash
-./cleanup-aws-resources.sh --region eu-west-1
+./cleanup-aws-resources.sh --region eu-west-3
 ```
 
 ### With AWS Profile
@@ -55,7 +55,7 @@ The script will delete the following AWS resources:
 ### Combined Options
 
 ```bash
-./cleanup-aws-resources.sh --region eu-west-1 --profile gokstad
+./cleanup-aws-resources.sh --region eu-west-3 --profile gokstad
 ```
 
 ### Help

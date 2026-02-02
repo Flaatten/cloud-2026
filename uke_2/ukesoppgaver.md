@@ -71,7 +71,7 @@ graph TD
       * Last ned key pair-filen og lagre den sikkert
       * Endre tillatelser på key pair: `chmod 400 taskmanager-key.pem`
     - Konfigurer \"Network Settings \" -> Trykk på Edit
-        - Konfigurer instance details: Velg ditt VPC og **public** subnettet (se på navnet for å vite at det er public) i sone `eu-west-1a`
+        - Konfigurer instance details: Velg ditt VPC og **public** subnettet (se på navnet for å vite at det er public) i sone `eu-west-3a`
         - **VIKTIG: EC2-instansen MÅ plasseres i et public subnet for at SSH skal kunne nå den. Private subnets har ikke direkte tilgang til internett via Internet Gateway.**
         - `Auto-assign public IP`: Enable
         - `Firewall`: Create Security Group
@@ -123,7 +123,7 @@ Før du begynner her må det settes riktige tilganger på SSH-nøkkelen. Det gj�
    ssh -i your-key.pem ec2-user@your-instance-ip
    ```
 
-   Riktig kommando kan også finnes her ved å gå inn i `EC2`-viewet til AWS, og deretter trykke på `Connect` i menyen øverst til høyre. Du trykker deg videre inn på `SSH Client`, og ser en link i bunn der som skal se noe ala dette ut: `ssh -i "taskmanager-key.pem" ec2-user@ec2-54-75-40-70.eu-west-1.compute.amazonaws.com`
+   Riktig kommando kan også finnes her ved å gå inn i `EC2`-viewet til AWS, og deretter trykke på `Connect` i menyen øverst til høyre. Du trykker deg videre inn på `SSH Client`, og ser en link i bunn der som skal se noe ala dette ut: `ssh -i "taskmanager-key.pem" ec2-user@ec2-54-75-40-70.eu-west-3.compute.amazonaws.com`
 
     ![Screenshot of AWS VPC Creation](../static/img/ec2-connect.png)
 
@@ -501,7 +501,7 @@ Før du begynner må du sette opp AWS CLI og programatisk aksess til AWS via Ter
 4. Du vil bli bedt om å fylle inn følgende:
     - AWS Access Key ID: [Lim inn Access Key ID]
     - AWS Secret Access Key: [Lim inn Secret Access Key]
-    - Default region name: [eu-west-1]
+    - Default region name: [eu-west-3]
     - Default output format: [Enter for json] -> Trykk enter
 
 ### Tips
