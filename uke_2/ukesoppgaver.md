@@ -859,4 +859,6 @@ docker logs frontend
 docker logs backend
 ```
 
-</details>\n\n
+</details>
+
+
