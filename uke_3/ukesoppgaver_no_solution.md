@@ -1360,7 +1360,9 @@ Applikasjonen skal nå fungere med bildeopplasting.
 </details>
 
 
-\n\n
+
+
+
 ## Oppgave 8 (ekstra-oppgave for de som vil teste, er i utgangspunktet neste ukes pensum): Implementering av AWS Lambda for periodiske oppgaver
 
 I denne oppgaven skal du implementere en AWS Lambda-funksjon for å utføre periodiske oppgaver relatert til oppgavestyringssystemet.
@@ -1550,7 +1552,9 @@ def lambda_handler(event, context):
 
 Du har nå implementert en Lambda-funksjon med nødvendige avhengigheter som automatisk sjekker for oppgaver som snart forfaller og sender varslinger.
 
-</details>\n\n
+</details>
+
+
 # Sletting av ressurser i etterkant:
 
 Resource Explorer klarer ikke alltid å finne RDS databaser, så disse må slettes manuelt. Dette gjøres ved å gå til RDS i konsollen, velge databasen og slette den.
