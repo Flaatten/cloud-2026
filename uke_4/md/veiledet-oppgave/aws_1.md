@@ -607,7 +607,7 @@ Oppdatert lambda test event objektet til å være:
       "method": "GET",
       "path": "/tasks"
     }
-  },
+  }
 }
 ```
 
