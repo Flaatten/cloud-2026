@@ -1,0 +1,34 @@
+version: '3'
+services:
+  web:
+    image: flaattengokstad/api:latest
+    # build: ./api
+    container_name: api
+    environment:
+      - DATABASE_URL=mysql://product-api:securepass@database-1.c7g8yamuicvd.eu-west-3.rds.amazonaws.com:3306/products
+    # ports:
+    #   - "5000:5000"
+
+  db:
+    image: flaattengokstad/db:latest
+    # build: ./db
+    environment:
+      - MYSQL_ROOT_PASSWORD=passord
+      - MYSQL_DATABASE=todos
+      - MYSQL_USER=user
+      - MYSQL_PASSWORD=passord
+    # ports:
+    #   - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+  nginx:
+    image: flaattengokstad/nginx:latest
+    # build: ./nginx
+    ports:
+      - "80:80"
+    depends_on:
+      - web
+    
+volumes:
+  mysql_data:
