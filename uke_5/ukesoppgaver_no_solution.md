@@ -668,9 +668,7 @@ SHOW TABLES;
 
 </details>
 
-
-
-
+\n\n
 ## Oppgave 4: Implementere Lambda-funksjon med CloudFormation
 
 I denne oppgaven skal vi utvide vår CloudFormation-mal for å inkludere en Lambda-funksjon som vil fungere som backend for vårt oppgavestyringssystem. Denne funksjonen vil kommunisere med RDS-databasen for å lagre og hente oppgaver.
@@ -684,11 +682,15 @@ I denne oppgaven skal vi utvide vår CloudFormation-mal for å inkludere en Lamb
   - Behold standard innstillinger
   - Klikk "Create bucket"
 
+
+
 2. Forbered og last opp Lambda Layer:
-  - På din lokale maskin, opprett en mappe `python`
-  - Inne i `python` mappen, kjør: `pip install pymysql -t .`
-  - Zip innholdet av `python` mappen med kommandoen:
+  - På din lokale maskin, kjør
     ```bash
+    mkdir pymysql-layer
+    cd pymysql-layer
+    mkdir python
+    pip3 install pymysql -t python/
     zip -r pymysql-layer.zip python/
     ```
   - Gå tilbake til S3-konsollen
@@ -748,12 +750,16 @@ Resources:
           Value: test-project
 
 Outputs:
-  BucketName:
+  PyMySQLBucketName:
     Description: Name of the created S3 bucket
     Value: !Ref PyMySQLBucket
-  BucketArn:
+    Export:
+      Name: PyMySQLBucketName
+  PyMySQLBucketArn:
     Description: ARN of the created S3 bucket
     Value: !GetAtt PyMySQLBucket.Arn
+    Export:
+      Name: PyMySQLBucketArn
 ```
 
 2. Deploy S3-bøtten:
@@ -782,7 +788,7 @@ Outputs:
       LayerName: pymysql-layer
       Description: Layer containing PyMySQL library
       Content:
-        S3Bucket: !Ref PyMySQLBucket
+        S3Bucket: !ImportValue PyMySQLBucketName
         S3Key: pymysql-layer.zip
       CompatibleRuntimes:
         - python3.12
@@ -818,15 +824,27 @@ Outputs:
               - Effect: Allow
                 Action:
                   - s3:GetObject
-                Resource: !Sub "${PyMySQLBucket.Arn}/*"
+                Resource:
+                  !Join
+                    - ""
+                    - - !ImportValue PyMySQLBucketArn
+                      - "/*"
 
   TaskManagementFunctionUrlPermission:
     Type: AWS::Lambda::Permission
+    DependsOn: TaskManagementFunctionUrl
     Properties:
       FunctionName: !Ref TaskManagementFunction
       Action: lambda:InvokeFunctionUrl
       Principal: '*'
       FunctionUrlAuthType: NONE
+
+  TaskManagementFunctionInvokePermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      FunctionName: !Ref TaskManagementFunction
+      Action: lambda:InvokeFunction
+      Principal: '*'
 
   TaskManagementFunction:
     Type: AWS::Lambda::Function
@@ -841,6 +859,13 @@ Outputs:
           import json
           import pymysql
           import os
+
+          def get_cors_headers():
+              return {
+                'Access-Control-Allow-Origin': '*',
+                'Access-Control-Allow-Headers': '*',
+                'Access-Control-Allow-Methods': '*'
+              }
 
           def get_db_connection():
               return pymysql.connect(
@@ -865,6 +890,7 @@ Outputs:
                           tasks = cursor.fetchall()
                           return {
                               'statusCode': 200,
+                            'headers': get_cors_headers(),
                               'body': json.dumps(tasks)
                           }
                       elif event['httpMethod'] == 'POST':
@@ -874,15 +900,18 @@ Outputs:
                           conn.commit()
                           return {
                               'statusCode': 200,
+                            'headers': get_cors_headers(),
                               'body': json.dumps({'message': 'Task created successfully'})
                           }
                       elif event['httpMethod'] == 'OPTIONS':
                           return {
                               'statusCode': 200,
+                            'headers': get_cors_headers(),
                               'body': ''
                           }
                       return {
                           'statusCode': 400,
+                          'headers': get_cors_headers(),
                           'body': json.dumps({'message': 'Invalid request method'})
                       }
               finally:
@@ -905,21 +934,6 @@ Outputs:
     Type: AWS::Lambda::Url
     Properties:
       AuthType: NONE
-      Cors:
-        AllowCredentials: false
-        AllowHeaders:
-          - "content-type"
-          - "access-control-allow-origin"
-          - "access-control-allow-methods"
-        AllowMethods:
-          - "*"
-        AllowOrigins:
-          - "*"
-        ExposeHeaders:
-          - "content-type"
-          - "access-control-allow-origin"
-          - "access-control-allow-methods"
-        MaxAge: 0
       TargetFunctionArn: !Ref TaskManagementFunction
 
 Outputs:
@@ -1105,6 +1119,13 @@ graph TD
           import os
           import boto3
 
+          def get_cors_headers():
+              return {
+                'Access-Control-Allow-Origin': '*',
+                'Access-Control-Allow-Headers': '*',
+                'Access-Control-Allow-Methods': '*'
+              }
+
           def get_db_connection():
               return pymysql.connect(
                   host=os.environ['DB_HOST'],
@@ -1129,12 +1150,13 @@ graph TD
                           tasks = cursor.fetchall()
                           return {
                               'statusCode': 200,
+                              'headers': get_cors_headers(),
                               'body': json.dumps(tasks)
                           }
                       elif event['httpMethod'] == 'POST':
                           body = json.loads(event['body'])
                           cursor.execute("INSERT INTO tasks (title, description, status) VALUES (%s, %s, %s)",
-                              (body['title'], body['description'], 'New'))
+                              (body['title'], body['description'], 'Pending'))
                           conn.commit()
                           
                           task_id = cursor.lastrowid
@@ -1143,7 +1165,7 @@ graph TD
                               'task_id': task_id,
                               'title': body['title'],
                               'description': body['description'],
-                              'status': 'New'
+                              'status': 'Pending'
                           }
                           
                           sns.publish(
@@ -1154,10 +1176,17 @@ graph TD
                           
                           return {
                               'statusCode': 200,
+                              'headers': get_cors_headers(),
                               'body': json.dumps({
                                   'message': 'Task created successfully',
                                   'task_id': task_id
                               })
+                          }
+                      elif event['httpMethod'] == 'OPTIONS':
+                          return {
+                              'statusCode': 200,
+                              'headers': get_cors_headers(),
+                              'body': ''
                           }
               finally:
                   conn.close()
@@ -1359,9 +1388,7 @@ For å verifisere at alt fungerer:
 > [!NOTE]
 > Det kan ta noen sekunder før meldingen går gjennom hele kjeden. Vær tålmodig og refresh loggene hvis nødvendig.
 
-</details>
-
-
+</details>\n\n
 ## Oppgave 6: Implementere CloudWatch Logs for Lambda-funksjoner
 
 I denne oppgaven skal vi utvide vår CloudFormation-mal for å inkludere CloudWatch Logs for våre Lambda-funksjoner. Dette vil gi oss muligheten til å overvåke og feilsøke våre Lambda-funksjoner mer effektivt.
@@ -1612,9 +1639,7 @@ Denne oppdateringen til vår CloudFormation-mal legger til CloudWatch Logs for v
 Ved å bruke CloudFormation for å sette opp CloudWatch Logs, sikrer vi at vår logginginfrastruktur er konsistent og reproduserbar. Dette er en viktig del av `Infrastructure as Code` prinsippet, som gjør det enklere å administrere og vedlikeholde komplekse systemer over tid.
 
 </details>
-
-
-
+\n\n
 # Sletting av ressurser i etterkant:
 
 Resource Explorer klarer ikke alltid å finne RDS databaser, så disse må slettes manuelt. Dette gjøres ved å gå til RDS i konsollen, velge databasen og slette den.
